@@ -48,18 +48,16 @@ for item in modules: #remove spaces
 		modules[modules.index(item)] = item.replace(" ", "")
 
 
-if os.path.exists("\\src"): #generate \\src file
+if not os.path.exists("\\src"): #generate \\src file
 	os.mkdir("src")
 	print "Making \\src"
 
-os.chdir("src")
-
 for item in os.listdir(loc): #compile source code into *.pyc files
 	if item == os.path.basename(__file__): #ignore compiler
-		print "Ignoring " + item
+		print "Ignoring /" + item
 		continue
 
-	elif item.split(".", 1)[1] == "py": #only compile *.py files
+	elif item.endswith(".py"): #only compile *.py files
 		try:
 			py_compile.compile(item)
 
@@ -67,18 +65,29 @@ for item in os.listdir(loc): #compile source code into *.pyc files
 			print e
 
 		print "Compiling source"
-		print item + "     ------>     " + item.split(".", len(item))[0] + ".pyc"
+		print "./" + item + "     ------>     " + item.split(".", len(item))[0] + ".pyc" #Compile messages
+
+		if item[:len(item) - 3] + ".pyc" in os.listdir(loc):
+			os.chdir("src")
+			print "Moving " + loc + "\\" + item[:len(item) - 3] + ".pyc     ------>     " + os.getcwd()
+			os.rename(loc + "\\" + item[:len(item) - 3] + ".pyc", os.getcwd() + "\\" + item[:len(item) - 3] + ".pyc") #move *.pyc file to //src
+			os.chdir(loc)
 	
 	else: #ignore all other files
-		print "Ignoring " + item
+		print "Ignoring /" + item
 		continue
-
-os.chdir(loc)
 
 print "Generating " + name + ".zip"
 zf = zipfile.ZipFile(name + ".zip", 'w') #generate zip file
 
+for dirname, subdirs, files in os.walk("src"):
+	zf.write(dirname)
+	for filename in files:
+		zf.write(os.path.join(dirname, filename))
+
 zf.close()
+
+os.rename(loc + "\\" + name + ".zip", loc + "\\" + name + ".par")
 
 print content
 print modules
