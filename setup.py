@@ -16,6 +16,7 @@ import os
 import zipfile
 import importlib
 import py_compile
+import dis
 
 loc = os.getcwd() #gets current directory
 
@@ -48,7 +49,7 @@ for item in modules: #remove spaces
 		modules[modules.index(item)] = item.replace(" ", "")
 
 
-if not os.path.exists("\\src"): #generate \\src file
+if not os.path.exists(os.getcwd() + "\\src"): #generate \\src file
 	os.mkdir("src")
 	print "Making \\src"
 
@@ -65,11 +66,12 @@ for item in os.listdir(loc): #compile source code into *.pyc files
 			print e
 
 		print "Compiling source"
-		print "./" + item + "     ------>     " + item.split(".", len(item))[0] + ".pyc" #Compile messages
+		print "./" + item + "     ------>     " + item[:len(item) - 3] + ".pyc" #Compile messages
+		dis.dis(item[:len(item) - 3])
 
 		if item[:len(item) - 3] + ".pyc" in os.listdir(loc):
 			os.chdir("src")
-			print "Moving " + loc + "\\" + item[:len(item) - 3] + ".pyc     ------>     " + os.getcwd()
+			print "Moving " + loc + "\\" + item[:len(item) - 3] + ".pyc     ------>     " + os.getcwd() #Compile messages
 			os.rename(loc + "\\" + item[:len(item) - 3] + ".pyc", os.getcwd() + "\\" + item[:len(item) - 3] + ".pyc") #move *.pyc file to //src
 			os.chdir(loc)
 	
