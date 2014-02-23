@@ -87,6 +87,12 @@ for dirname, subdirs, files in os.walk("src"):
 	for filename in files:
 		zf.write(os.path.join(dirname, filename))
 
+for dirname, subdirs, files in os.walk("bin"):
+	zf.write(dirname)
+	for filename in files:
+		zf.write(os.path.join(dirname, filename))
+
+zf.write("run.py")
 zf.close()
 
 os.rename(loc + "\\" + name + ".zip", loc + "\\" + name + ".par")
