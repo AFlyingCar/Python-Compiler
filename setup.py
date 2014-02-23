@@ -25,20 +25,22 @@ name = ""
 
 if len(sys.argv) >= 1: #if the user passes filename(s) through the terminal
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "hi:o:", ["ifile="])
+		opts, args = getopt.getopt(sys.argv[1:], "hi:o:", ["ifile="]) #get parameters passed by user
 	except getopt.GetoptError:
 		print help
 		sys.exit()
 
 	for opt, arg in opts:
-		if opt == '-h':
+		if opt == '-h': #print what to do
 			print help
 			sys.exit()
-		elif opt in ('-i', '--ifile'):
+
+		elif opt in ('-i', '--ifile'): #if the user inputs a filename
 			name = arg
 
-		else:
+		else: #if the user inputs something that isn't an option
 			print "GenericError"
+			print help
 			sys.exit()
 
 else: #if the user runs the program without passing args through the terminal
@@ -108,17 +110,15 @@ zf = zipfile.ZipFile(name + ".zip", 'w') #generate zip file
 
 for dirname, subdirs, files in os.walk("src"): #write \\src to the *.zip
 	zf.write(dirname)
-	
 	for filename in files:
 		zf.write(os.path.join(dirname, filename))
 
 for dirname, subdirs, files in os.walk("bin"): #write \\bin to the *.zip
 	zf.write(dirname)
-
 	for filename in files:
 		zf.write(os.path.join(dirname, filename))
 
-zf.write("run.py") #write ./run.py to the *.zip
+#zf.write("run.py") #write ./run.py to the *.zip Note: commented out until the generator for ./run.py has been completed
 zf.close()
 
 os.rename(loc + "\\" + name + ".zip", loc + "\\" + name + ".ppr") #change *.zip to *.ppr
