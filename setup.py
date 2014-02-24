@@ -23,7 +23,7 @@ loc = os.getcwd() #gets current directory
 help = __file__.split("\\")[len(__file__.split("\\")) - 1] + " -i *.py"
 name = ""
 
-if len(sys.argv) >= 1: #if the user passes filename(s) through the terminal
+if len(sys.argv) > 1: #if the user passes filename(s) through the terminal
 	try:
 		opts, args = getopt.getopt(sys.argv[1:], "hi:o:", ["ifile="]) #get parameters passed by user
 	except getopt.GetoptError:
@@ -80,6 +80,10 @@ if not os.path.exists(os.getcwd() + "\\src"): #generate \\src file
 
 for item in os.listdir(loc): #compile source code into *.pyc files
 	if item == os.path.basename(__file__): #ignore self
+		print "Ignoring /" + item
+		continue
+
+	elif item not in name: #ignore all but selected files
 		print "Ignoring /" + item
 		continue
 
