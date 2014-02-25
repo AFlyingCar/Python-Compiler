@@ -6,19 +6,16 @@
 import os, sys
 
 loc = os.getcwd()
+name = raw_input("File name: ")
 
-try:
-	os.chdir(os.getcwd() + "\\src")
-except Exception as e:
-	print e
-	sys.exit()
-
-for item in os.getcwd():
-	if item.endswith(".py"):
-		pass
-
-content = """SET SAVE=%PYTHONPATH%"""
+content = """@echo off
+SET SAVE=%PYTHONPATH%
+SET PYTHONPATH=\\.\\bin
+.\\src\\""" + name + """
+SET PYTHONPATH=%SAVE%"""
 
 print content
+
+open("run.bat", "w").write(content)
 
 nuclear = u'\u2622'
