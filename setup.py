@@ -46,6 +46,10 @@ if len(sys.argv) > 1: #if the user passes filename(s) through the terminal
 else: #if the user runs the program without passing args through the terminal
 	name = raw_input("Name of file to package: ")
 
+if not name.endswith(".py"):
+	print "FileError: Can only package and *.py files."
+	sys.exit()
+
 print "Filename: " + name + "\n"
 
 if name in os.listdir(loc):
@@ -55,8 +59,8 @@ if name in os.listdir(loc):
 else:
 	print "No such file or directory: '" + name + ".'"
 
-name = name.split(".", len(name.split(".")) -1)[0] #get raw name without extension (might not be needed)
-print name #debug message
+NewName = name.split(".", len(name.split(".")) -1)[0] #get raw name without extension (might not be needed)
+print NewName #debug message9
 
 for item in content: #remove comments from code
 	if "#" in item:
@@ -76,7 +80,7 @@ for item in modules: #remove spaces
 
 if not os.path.exists(os.getcwd() + "\\src"): #generate \\src file
 	os.mkdir("src")
-	print "Making \\src"
+	print "Generating \\src"
 
 for item in os.listdir(loc): #compile source code into *.pyc files
 	if item == os.path.basename(__file__): #ignore self
@@ -109,7 +113,7 @@ for item in os.listdir(loc): #compile source code into *.pyc files
 		print "Ignoring /" + item
 		continue
 
-print "Generating " + name + ".zip"
+print "Generating " + NewName + ".zip"
 zf = zipfile.ZipFile(name + ".zip", 'w') #generate zip file
 
 for dirname, subdirs, files in os.walk("src"): #write \\src to the *.zip
@@ -122,10 +126,14 @@ for dirname, subdirs, files in os.walk("bin"): #write \\bin to the *.zip
 	for filename in files:
 		zf.write(os.path.join(dirname, filename))
 
-#zf.write("run.py") #write ./run.py to the *.zip Note: commented out until the generator for ./run.py has been completed
+zf.write("run.bat") #write ./run.py to the *.zip Note: commented out until the generator for ./run.py has been completed
 zf.close()
 
 os.rename(loc + "\\" + name + ".zip", loc + "\\" + name + ".ppr") #change *.zip to *.ppr
+
+os.rmdir(os.getcwd() + "\\src")
+os.rmdir(os.getcwd() + '\\bin')
+os.system('del run.bat')
 
 print content
 print modules
