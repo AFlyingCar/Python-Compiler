@@ -13,6 +13,8 @@
 			#Executees bytecode in ./src
 
 import dis
+import time
+import shutil
 import os, sys, getopt
 import zipfile
 import importlib
@@ -57,6 +59,10 @@ if not name.endswith(".py"):
 
 print "Filename: " + name + "\n"
 
+######Get raw name without extension######
+NewName = name.split(".", len(name.split(".")) -1)[0]
+print NewName #debug message
+
 ######Make run.bat######
 content = """@echo off
 SET SAVE=%PYTHONPATH%
@@ -90,10 +96,10 @@ for root, dirs, files in os.walk("C:\\Python27\\libs"):
 		os.system("copy " + root + "\\" + file + " " + os.getcwd() + "\\libs")
 
 print "\nIndexing loaded modules: \n"
-for name, mod in finder.modules.iteritems():
-	print '%s: ' % name,
+for foo, mod in finder.modules.iteritems():
+	print '%s: ' % foo,
 	print ','.join(mod.globalnames.keys()[:3])
-	modules.append(name)
+	modules.append(foo)
 
 print '-'*50
 
@@ -135,10 +141,6 @@ if name in os.listdir(loc):
 else:
 	print "No such file or directory: '" + name + ".'"
 
-######Get raw name without extension######
-NewName = name.split(".", len(name.split(".")) -1)[0]
-print NewName #debug message9
-
 for item in content: #remove comments from code
 	if "#" in item:
 		content.remove(item)
@@ -166,6 +168,8 @@ for item in os.listdir(loc):
 		continue
 
 	elif item not in name: #ignore all but selected files
+		time.sleep(1)
+		print name
 		print "Ignoring /" + item
 		continue
 
@@ -211,9 +215,9 @@ zf.close()
 
 os.rename(loc + "\\" + NewName + ".zip", loc + "\\" + NewName + ".ppr") #change *.zip to *.ppr
 
-#os.rmdir(os.getcwd() + "\\src")
-#os.rmdir(os.getcwd() + '\\bin')
-#os.system('del run.bat')
+shutil.rmtree('src')
+shutil.rmtree('bin')
+os.remove('run.bat')
 
 print content
 print modules
