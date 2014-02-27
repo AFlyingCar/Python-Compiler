@@ -13,7 +13,6 @@
 			#Executees bytecode in ./src
 
 import dis
-import time
 import shutil
 import os, sys, getopt
 import zipfile
@@ -168,8 +167,6 @@ for item in os.listdir(loc):
 		continue
 
 	elif item not in name: #ignore all but selected files
-		time.sleep(1)
-		print name
 		print "Ignoring /" + item
 		continue
 
